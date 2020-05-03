@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">PocTech Inside</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="show_BS">Show/Hide BS</string>
+    <string name="show_BS_smooth">Show/Hide smooth BS</string>
+    <string name="show_Iw">Show/Hide Iw</string>
+    <string name="show_Ib">Show/Hide Ib</string>
+    <string name="show_K">Show/Hide K</string>
+    <string name="show_Poc1">Show/Hide POC1</string>
+    <string name="show_Poc2">Show/Hide POC2</string>
+
+    <string name="menu_usage">How to use?</string>
+    <string name="menu_usage_URL">https://docs.google.com/document/d/1M88kDUy6N58hsjnnrbO_jHU3tneItijSfNMNSMSHB3Q/edit?usp=sharing</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="override_Ib">Override Ib</string>
+    <string name="value_Ib">Value for Ib</string>
+    <string name="override_K">Override K</string>
+    <string name="value_K">Value for K</string>
+
+    <string name="home_second">Home Second</string>
+</resources>
