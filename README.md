@@ -1,29 +1,23 @@
-# README #
+**Использование приложения ”PocTech Inside”**
 
-This README would normally document whatever steps are necessary to get your application up and running.
 
-### What is this repository for? ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+1. Запустите приложение, разрешите доступ к файлам.
+2. В приложении PocTech Care Mobile перейдите во вкладку Data, Review & Export Data, выберите сенсор, нажмите Export.
+3. Перейдите в приложение PocTech Inside. Вы увидите график и текущее значение сахара (BS). Каждый раз при экспорте график авто-обновляется.
+4. Значение будут показываться даже до того, как вы впервые откалибруете датчик. Однако, будьте осторожны, это лишь оценочное значение. 
+5. Работа программы основана на использовании формулы \
+ \
+**BS = (Iw-Ib)/K** \
+ \
+Где К - чувствительность сенсора, Iw - глюкозозависимый ток, Ib - базовый (глюкозонезависимый) ток. Эти токи видны в приложении PocTech Care Mobile на странице Data. По умолчанию мы полагаем R=5.5, но по мере работы данчика этот коэффициент медленно меняется. Если вы повторно используете датчик, то свой коэффициент K вы должны знать, он простоянно показывается в приложении PocTech Inside. Вместо значения 5.5 вы можете ввести свое в настройках. Поставьте [x] Override K и введите значение. Это есть смысл днлать, если еще не было калибровки. В случае корректной калибровки (на ровном сахаре) нет смысла вводить свой K.
+6. Вы можете посмотреть другие полезные графики, выберите в выпадающем списке нужные. POC1, POC2 - другие алгоритмы расчета, можете попробовать, какие лучше подходят именно вам.  \
+Описание доступных графиков: \
 
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+    *   BS - несглаженное значение сахара.
+    *   Smooth BS - сглаженное значение сахара.
+    *   K - чувствительность сенсора.
+    *   Iw - глюкозозависимый ток
+    *   Ib - глюкозонезависимый ток
+    *   POC1 - алгоритм 1 (от PocTech).
+    *   POC2 - алгоритм 2 (от PocTech). \
