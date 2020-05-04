@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         OverrideK=false;
         OverridenK=5.0;
         SettingsChanged=false;
+        ReportToOpen="";
+        LastOpenReport="";
     }
     public class ChannelProps{
         public ChannelProps(int cl, double low, double high,String legend){
@@ -233,13 +235,17 @@ public class MainActivity extends AppCompatActivity {
     public int CurrentEL;
     public int NumToShow;
     public int NumChannels;
-    public String LastFile;
     public Timer timer;
+
+    public static String  LastFile;
     public static boolean OverrideIb;
-    public static double OverridenIb;
+    public static double  OverridenIb;
     public static boolean OverrideK;
-    public static double OverridenK;
+    public static double  OverridenK;
     public static boolean SettingsChanged;
+    public static String  ReportToOpen;
+    public static String  LastOpenReport;
+
     ChannelProps[] Props;
     ChannelProps prop(int channel){
         return Props[channel];
@@ -248,6 +254,15 @@ public class MainActivity extends AppCompatActivity {
     //returns true if something changed
     public boolean ReadLastGraph() {
         try {
+            if(ReportToOpen.length() > 0){
+                if(!ReportToOpen.equals(LastOpenReport)) {
+                    LastOpenReport=ReportToOpen;
+                    pc.read(ReportToOpen);
+                    return true;
+                }
+                return false;
+            }
+            LastOpenReport=ReportToOpen="";
             File directory = new File("/storage/emulated/0/PocData/");
             File[] files = directory.listFiles();
             FileTime Last = null;
@@ -327,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
-        if(timer == null) {
+        //if(timer == null) {
             final Handler handler = new Handler();
             timer = new Timer();
             timer.scheduleAtFixedRate(new TimerTask() {
@@ -340,8 +355,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 }
-            }, 0, 5000);
-        }
+            }, 0, 2000);
+        //}
     }
     public void setupGraph(){
         if(pc.Elements.size() > 0) {
@@ -423,6 +438,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, SettingsPage.class);
         startActivity(intent);
     }
+    public void SelFile(){
+        Intent intent = new Intent(MainActivity.this, SelectReport.class);
+        startActivity(intent);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -433,6 +452,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
+                break;
+            case R.id.sel_file:
+                SelFile();
                 break;
             case R.id.id_settings:
                 Options();

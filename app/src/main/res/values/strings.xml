@@ -27,4 +27,6 @@
     <string name="value_K">Value for K</string>
 
     <string name="home_second">Home Second</string>
+    <string name="sel_file">Choose file</string>
+    <string name="auto_file">Auto-load the report (last)</string>
 </resources>

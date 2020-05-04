@@ -6,36 +6,40 @@
         android:orderInCategory="101"
         android:title="@string/menu_usage" />
     <item
+        android:id="@+id/sel_file"
+        android:orderInCategory="102"
+        android:title="@string/sel_file" />
+    <item
         android:id="@+id/id_settings"
         android:icon="@android:drawable/ic_menu_manage"
-        android:orderInCategory="102"
+        android:orderInCategory="103"
         android:title="@string/action_settings" />
     <item
         android:id="@+id/show_BS"
-        android:orderInCategory="103"
+        android:orderInCategory="104"
         android:title="@string/show_BS" />
     <item
         android:id="@+id/show_BS_smooth"
-        android:orderInCategory="104"
+        android:orderInCategory="105"
         android:title="@string/show_BS_smooth" />
     <item
         android:id="@+id/show_K"
-        android:orderInCategory="105"
+        android:orderInCategory="106"
         android:title="@string/show_K" />
     <item
         android:id="@+id/show_Iw"
-        android:orderInCategory="106"
+        android:orderInCategory="107"
         android:title="@string/show_Iw" />
     <item
         android:id="@+id/show_Ib"
-        android:orderInCategory="107"
+        android:orderInCategory="108"
         android:title="@string/show_Ib" />
     <item
         android:id="@+id/show_Poc1"
-        android:orderInCategory="108"
+        android:orderInCategory="109"
         android:title="@string/show_Poc1" />
     <item
         android:id="@+id/show_Poc2"
-        android:orderInCategory="109"
+        android:orderInCategory="110"
         android:title="@string/show_Poc2" />
 </menu>
