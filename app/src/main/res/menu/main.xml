@@ -16,30 +16,37 @@
         android:title="@string/action_settings" />
     <item
         android:id="@+id/show_BS"
+        android:checkable="true"
         android:orderInCategory="104"
         android:title="@string/show_BS" />
     <item
         android:id="@+id/show_BS_smooth"
+        android:checkable="true"
         android:orderInCategory="105"
         android:title="@string/show_BS_smooth" />
     <item
         android:id="@+id/show_K"
+        android:checkable="true"
         android:orderInCategory="106"
         android:title="@string/show_K" />
     <item
         android:id="@+id/show_Iw"
+        android:checkable="true"
         android:orderInCategory="107"
         android:title="@string/show_Iw" />
     <item
         android:id="@+id/show_Ib"
+        android:checkable="true"
         android:orderInCategory="108"
         android:title="@string/show_Ib" />
     <item
         android:id="@+id/show_Poc1"
+        android:checkable="true"
         android:orderInCategory="109"
         android:title="@string/show_Poc1" />
     <item
         android:id="@+id/show_Poc2"
+        android:checkable="true"
         android:orderInCategory="110"
         android:title="@string/show_Poc2" />
 </menu>

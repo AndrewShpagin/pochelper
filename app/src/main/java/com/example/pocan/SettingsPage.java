@@ -23,6 +23,7 @@ public class SettingsPage extends AppCompatActivity {
         E.setText(String.format("%.02f",MainActivity.OverridenK));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // getSupportActionBar().setIcon(R.drawable.);
 
     }
     @Override

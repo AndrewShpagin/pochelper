@@ -6,13 +6,13 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="show_BS">Show/Hide BS</string>
-    <string name="show_BS_smooth">Show/Hide smooth BS</string>
-    <string name="show_Iw">Show/Hide Iw</string>
-    <string name="show_Ib">Show/Hide Ib</string>
-    <string name="show_K">Show/Hide K</string>
-    <string name="show_Poc1">Show/Hide POC1</string>
-    <string name="show_Poc2">Show/Hide POC2</string>
+    <string name="show_BS">Show BS</string>
+    <string name="show_BS_smooth">Show smooth BS</string>
+    <string name="show_Iw">Show Iw</string>
+    <string name="show_Ib">Show Ib</string>
+    <string name="show_K">Show K</string>
+    <string name="show_Poc1">Show POC1</string>
+    <string name="show_Poc2">Show POC2</string>
 
     <string name="menu_usage">How to use?</string>
     <string name="menu_usage_URL">https://docs.google.com/document/d/1M88kDUy6N58hsjnnrbO_jHU3tneItijSfNMNSMSHB3Q/edit?usp=sharing</string>

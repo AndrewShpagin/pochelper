@@ -254,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
     public static boolean SettingsChanged;
     public static String  ReportToOpen;
     public static String  LastOpenReport;
+    public Menu MenuRef;
 
     public static void SaveSettings(){
         try {
@@ -414,6 +415,19 @@ public class MainActivity extends AppCompatActivity {
             }, 0, 2000);
         //}
     }
+    public void SetupMenuBoxes(){
+        int[] ChIds=new int[]{R.id.show_Iw,R.id.show_Ib,-1,-1,R.id.show_Poc1,R.id.show_Poc2,R.id.show_K,-1,-1,R.id.show_BS, R.id.show_BS_smooth};
+        for(int k=0;k<NumChannels;k++) {
+            int id=ChIds[k];
+            if(id!=-1 && MenuRef!=null){
+                ChannelProps pr = prop(k);
+                MenuItem m=(MenuItem) MenuRef.findItem(id);
+                if(m!=null){
+                    m.setChecked(pr.Visible);
+                }
+            }
+        }
+    }
     public void setupGraph(){
         if(pc.Elements.size() > 0) {
             GraphView graph = (GraphView) findViewById(R.id.graph);
@@ -471,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
                         new DataPoint(0, 10),
                         new DataPoint(pc.Elements.size(), 10)
                 });
-                high.setColor(0xFF808000);
+                high.setColor(0xFFC0B000);
                 graph.addSeries(high);
                 int nref=0;
                 for(int i=0;i<pc.Elements.size();i++){
@@ -505,6 +519,7 @@ public class MainActivity extends AppCompatActivity {
                     +" Iw: "+String.format("%.1f", el.values[0])
                     +" Ib: "+String.format("%.1f", el.values[1]));
         }
+        SetupMenuBoxes();
     }
     public void Options(){
         Intent intent = new Intent(MainActivity.this, SettingsPage.class);
@@ -565,6 +580,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuRef=menu;
+        SetupMenuBoxes();
         return true;
     }
     @Override
