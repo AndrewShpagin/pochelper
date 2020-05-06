@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         SettingsChanged=false;
         ReportToOpen="";
         LastOpenReport="";
+        LastFileSize=0;
     }
     public class ChannelProps{
         public ChannelProps(int cl, double low, double high,String legend){
@@ -141,17 +143,16 @@ public class MainActivity extends AppCompatActivity {
             Smooth(8,nsmooth);//Ib_smoothed
             //setting default K=5.5
             for(int i=0;i<Elements.size();i++) {
-                Elements.get(i).values[6]=5.5;
+                Elements.get(i).values[6] = 5.5;
             }
             //getting K for ref points
             for(int i=0;i<Elements.size();i++){
                 if(Elements.get(i).IsCalibrationPoint){
-                    Elements.get(i).values[6]=(Elements.get(i).values[7] - Elements.get(i).values[8])/Elements.get(i).values[3];
-                }
-            }
-            if(MainActivity.OverrideIb){
-                for(int i=0;i<Elements.size();i++) {
-                    Elements.get(i).values[8]=MainActivity.OverridenIb;
+                    if(MainActivity.OverrideIb) {
+                        Elements.get(i).values[6]=(Elements.get(i).values[7] - MainActivity.OverridenIb)/Elements.get(i).values[3];
+                    }else{
+                        Elements.get(i).values[6]=(Elements.get(i).values[7] - Elements.get(i).values[8])/Elements.get(i).values[3];
+                    }
                 }
             }
             //interpolation of K
@@ -174,10 +175,17 @@ public class MainActivity extends AppCompatActivity {
             }
             //prediction itself
             for(int i=0;i<Elements.size();i++) {
-                //Predicted
-                Elements.get(i).values[9]=(Elements.get(i).values[0] - Elements.get(i).values[1])/Elements.get(i).values[6];
-                //Predicted_smoothed
-                Elements.get(i).values[10]=(Elements.get(i).values[7] - Elements.get(i).values[8])/Elements.get(i).values[6];
+                if(MainActivity.OverrideIb) {
+                    //Predicted
+                    Elements.get(i).values[9] = (Elements.get(i).values[0] - MainActivity.OverridenIb) / Elements.get(i).values[6];
+                    //Predicted_smoothed
+                    Elements.get(i).values[10] = (Elements.get(i).values[7] - MainActivity.OverridenIb) / Elements.get(i).values[6];
+                }else{
+                    //Predicted
+                    Elements.get(i).values[9]=(Elements.get(i).values[0] - Elements.get(i).values[1])/Elements.get(i).values[6];
+                    //Predicted_smoothed
+                    Elements.get(i).values[10]=(Elements.get(i).values[7] - Elements.get(i).values[8])/Elements.get(i).values[6];
+                }
             }
         }
         public void read(String pathname){
@@ -238,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
     public Timer timer;
 
     public static String  LastFile;
+    public static long LastFileSize;
     public static boolean OverrideIb;
     public static double  OverridenIb;
     public static boolean OverrideK;
@@ -246,6 +255,44 @@ public class MainActivity extends AppCompatActivity {
     public static String  ReportToOpen;
     public static String  LastOpenReport;
 
+    public static void SaveSettings(){
+        try {
+            appendLog("MainActivity::SaveSettings");
+            File file = new File("/storage/emulated/0/PocData/settings.dat");
+            FileWriter fr = new FileWriter(file);
+            fr.write("OverrideIb " + (OverrideIb ? "1" : "0") + "\n");
+            fr.write("OverridenIb " + OverridenIb+ "\n");
+            fr.write("OverrideK " + (OverrideK ? "1" : "0")+ "\n");
+            fr.write("OverridenK " + OverridenK+ "\n");
+            fr.flush();
+            fr.close();
+        }catch (Exception e){
+            e.printStackTrace();
+            appendLog("MainActivity::SaveSettings failed");
+        }
+    }
+    public static void LoadSettings(){
+        try {
+            appendLog("MainActivity::LoadSettings");
+            File file = new File("/storage/emulated/0/PocData/settings.dat");
+            FileReader fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+            StringBuffer sb = new StringBuffer();
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] sl = line.split(" ", 100);
+                if (sl.length == 2) {
+                    if (sl[0].equals("OverrideIb")) OverrideIb = Integer.valueOf(sl[1]) != 0;
+                    if (sl[0].equals("OverrideKb")) OverrideK = Integer.valueOf(sl[1]) != 0;
+                    if (sl[0].equals("OverridenIb"))OverridenIb = Double.valueOf(sl[1].replace(',', '.'));
+                    if (sl[0].equals("OverridenK")) OverridenK = Double.valueOf(sl[1].replace(',', '.'));
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            appendLog("MainActivity::LoadSettings failed");
+        }
+    }
     ChannelProps[] Props;
     ChannelProps prop(int channel){
         return Props[channel];
@@ -265,9 +312,11 @@ public class MainActivity extends AppCompatActivity {
             LastOpenReport=ReportToOpen="";
             File directory = new File("/storage/emulated/0/PocData/");
             File[] files = directory.listFiles();
+            appendLog("MainActivity::ReadLastGraph, directory.listFiles done");
             FileTime Last = null;
             boolean First = true;
             String Best = "";
+            long BestSize=0;
             for (int i = 0; i < files.length; i++) {
                 File myfile = files[i];
                 Path path = myfile.toPath();
@@ -281,25 +330,32 @@ public class MainActivity extends AppCompatActivity {
                             First = false;
                             Last = f;
                             Best = files[i].getAbsolutePath();
+                            BestSize = files[i].length();
                         }
                     } catch (Exception e) {
+                        appendLog("Exception,MainActivity::ReadLastGraph[1] " + e.getMessage());
                         e.printStackTrace();
                     }
                 }
             }
-            if (Best.length() > 0 && (SettingsChanged || !LastFile.equals(Best))) {
+            if (Best.length() > 0 && (SettingsChanged|| BestSize!=LastFileSize || !LastFile.equals(Best))) {
                 SettingsChanged=false;
                 pc.read(Best);//"/storage/emulated/0/PocData/SN06900044_2020-04-25 09_18_59(21).txt");
-                LastFile = Best;
+                LastFile=Best;
+                LastFileSize=BestSize;
                 return true;
             }
         } catch (Exception e) {
+            appendLog("Exception,MainActivity::ReadLastGraph[2] "+e.getMessage());
+            e.printStackTrace();
             CheckPermissions();
         }
         return false;
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        appendLog("MainActivity::onCreate");
+        LoadSettings();
         CheckPermissions();
         super.onCreate(savedInstanceState);
         //requestPermissions();
@@ -383,7 +439,23 @@ public class MainActivity extends AppCompatActivity {
                     });
                     if(pr.IsCurrent)HasCurrent=true;
                     if(pr.IsBloodSugar)HasSugar=true;
-
+                    if(HasCurrent) {
+                        graph.getViewport().setYAxisBoundsManual(true);
+                        graph.getViewport().setMinY(0);
+                        graph.getViewport().setMaxY(80);
+                        graph.getGridLabelRenderer().setNumVerticalLabels(17);
+                    }else
+                    if(HasSugar){
+                        graph.getViewport().setYAxisBoundsManual(true);
+                        graph.getViewport().setMinY(0);
+                        graph.getViewport().setMaxY(20);
+                        graph.getGridLabelRenderer().setNumVerticalLabels(21);
+                    }else{
+                        graph.getViewport().setYAxisBoundsManual(true);
+                        graph.getViewport().setMinY(0);
+                        graph.getViewport().setMaxY(10);
+                        graph.getGridLabelRenderer().setNumVerticalLabels(11);
+                    }
                 }
             }
             graph.getViewport().setScrollable(true); // enables horizontal scrolling
@@ -495,7 +567,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -509,6 +580,34 @@ public class MainActivity extends AppCompatActivity {
         }
         if(ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+        }
+    }
+    public static void appendLog(String text) {
+        File logFile = new File("/storage/emulated/0/PocData/log.file");
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+            }
+            catch (IOException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(text);
+            buf.newLine();
+            buf.close();
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 }

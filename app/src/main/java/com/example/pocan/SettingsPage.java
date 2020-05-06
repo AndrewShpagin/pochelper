@@ -3,6 +3,7 @@ package com.example.pocan;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -20,8 +21,15 @@ public class SettingsPage extends AppCompatActivity {
         E.setText(String.format("%.02f",MainActivity.OverridenIb));
         E=findViewById(R.id.value_override_K);
         E.setText(String.format("%.02f",MainActivity.OverridenK));
-    }
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return true;
+    }
     @Override
     public void onBackPressed(){
         CheckBox C=findViewById(R.id.box_Iw);
@@ -45,6 +53,7 @@ public class SettingsPage extends AppCompatActivity {
 
         }
         MainActivity.SettingsChanged=true;
+        MainActivity.SaveSettings();
         this.finish();
     }
 }
