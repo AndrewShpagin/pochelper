@@ -1,4 +1,7 @@
-# [Download APK](https://bitbucket.org/AndrewShpagin/pochelper/raw/master/PocInside-apk-to-install.apk)
+# ![](https://bitbucket.org/AndrewShpagin/pochelper/raw/master/images/outline_save_alt_black_18dp.png)[Download APK](https://bitbucket.org/AndrewShpagin/pochelper/raw/master/PocInside-apk-to-install.apk)
+
+### WARNING! This app may not guarantee correct results of measurements! It just helps to understand what happens.
+
 
 **Использование приложения ”PocTech Inside”**
 
