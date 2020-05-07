@@ -1,0 +1,3 @@
+WARNING! This app may not guarantee correct results of measurements! It just helps to understand what happens.
+
+The sources and application are completely free, use it as you wish without any limitations. Mentioning the author is not required (but refer if you want).
