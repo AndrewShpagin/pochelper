@@ -2,7 +2,7 @@
 
 ### WARNING! This app may not guarantee correct results of measurements! It just helps to understand what happens.
     
-** Using the PocTech Inside app **
+**Using the PocTech Inside app**
 
 1. Download PocHelper-apk-to-install.apk (in the root of the repositiory). Run the application, allow access to files.
 2. In the PocTech Care Mobile application, go to the Data, Review & Export Data tab, select a sensor, click Export.
