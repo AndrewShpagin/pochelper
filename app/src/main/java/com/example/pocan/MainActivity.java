@@ -40,6 +40,7 @@ import java.util.TimerTask;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
@@ -114,6 +115,13 @@ public class MainActivity extends AppCompatActivity {
         public String Date;
         public int PrevRef;
         public int NextRef;
+    }
+    public String RoundDate(String s){
+        return s.replace(":01",":00")
+                .replace(":59",":00")
+                .replace(":29",":30")
+                .replace(":31",":30");
+
     }
     public class PocDataContainer{
         public PocDataContainer() {
@@ -210,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     el.values[4]=Double.valueOf(sl[8]);//poc1
                     el.values[5]=Double.valueOf(sl[9]);//poc2
                     el.IsCalibrationPoint = Integer.valueOf(sl[7]) > 0;
-                    el.Date=sl[2].replace(":01",":00").replace(":59",":00");
+                    el.Date=RoundDate(sl[2]);
                     Elements.add(el);
                 }
                 //set next, prev refs
@@ -492,12 +500,14 @@ public class MainActivity extends AppCompatActivity {
                         new DataPoint(pc.Elements.size(), 3.9)
                 });
                 low.setColor(0xFFFF0000);
+                low.setTitle("Low");
                 graph.addSeries(low);
                 LineGraphSeries<DataPoint> high = new LineGraphSeries<DataPoint>(new DataPoint[]{
                         new DataPoint(0, 10),
                         new DataPoint(pc.Elements.size(), 10)
                 });
                 high.setColor(0xFFC0B000);
+                high.setTitle("High");
                 graph.addSeries(high);
                 int nref = 0;
                 for (int i = 0; i < pc.Elements.size(); i++) {
@@ -507,7 +517,7 @@ public class MainActivity extends AppCompatActivity {
                 int p = 0;
                 for (int i = 0; i < pc.Elements.size(); i++) {
                     if (pc.Elements.get(i).IsCalibrationPoint) {
-                        rp[p] = new DataPoint(i, pc.Elements.get(i).values[3]);
+                        rp[p] = new DataPoint(i-FirstExactTimeValue, pc.Elements.get(i).values[3]);
                         p++;
                     }
                 }
@@ -521,8 +531,13 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(context, "REF:" + String.format("%.02f", dataPoint.getY()), Toast.LENGTH_LONG).show();
                     }
                 });
+                refs.setTitle("User's");
                 graph.addSeries(refs);
             }
+            graph.getLegendRenderer().setVisible(true);
+            graph.getLegendRenderer().setFixedPosition(0, 0);
+            //graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
             graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
                 @Override
                 public String formatLabel(double value, boolean isValueX) {
