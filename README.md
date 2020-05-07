@@ -1,4 +1,3 @@
-![](Poc1.jpg)
 **Использование приложения ”PocTech Inside”**
 
 1. Запустите приложение, разрешите доступ к файлам.
@@ -46,3 +45,5 @@ Description of available graphs:
     *  Ib - glucose-independent current
     *  POC1 - Algorithm 1 (from PocTech).
     *  POC2 - Algorithm 2 (from PocTech).
+    
+![Screenshot](https://bitbucket.org/AndrewShpagin/pochelper/raw/master/images/poc1.jpg)
