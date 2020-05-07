@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         CurrentEL=10;
         NumToShow=60;
         NumChannels=11;
+        FirstExactTimeValue=-1;
         Props=new ChannelProps[]{
             new ChannelProps(0xFFFF0000,0,6,"Iw"),          //0
             new ChannelProps(0xFF0000FF,0,6,"Ib"),          //1
@@ -208,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
                     el.values[4]=Double.valueOf(sl[8]);//poc1
                     el.values[5]=Double.valueOf(sl[9]);//poc2
                     el.IsCalibrationPoint = Integer.valueOf(sl[7]) > 0;
-                    el.Date=sl[2];
+                    el.Date=sl[2].replace(":01",":00").replace(":59",":00");
                     Elements.add(el);
                 }
                 //set next, prev refs
@@ -232,8 +234,17 @@ public class MainActivity extends AppCompatActivity {
         }
         public LineGraphSeries<DataPoint> GetGraph(int channel){
             DataPoint[] dataPoints = new DataPoint[Elements.size()];
+            FirstExactTimeValue=-1;
+            for(int i=0;i<Elements.size();i++) {
+                if (FirstExactTimeValue == -1) {
+                    if(Elements.get(i).Date.contains(":00")){
+                        FirstExactTimeValue=i;
+                        break;
+                    }
+                }
+            }
             for(int i=0;i<Elements.size();i++){
-                dataPoints[i]=new DataPoint(i, Elements.get(i).values[channel]);
+                dataPoints[i]=new DataPoint(i-FirstExactTimeValue, Elements.get(i).values[channel]);
             }
             LineGraphSeries<DataPoint> gr = new LineGraphSeries<DataPoint>(dataPoints);
             return gr;
@@ -243,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
     public int CurrentEL;
     public int NumToShow;
     public int NumChannels;
+    public int FirstExactTimeValue;
     public Timer timer;
 
     public static String  LastFile;
@@ -442,8 +454,8 @@ public class MainActivity extends AppCompatActivity {
                     series.setTitle(pr.Legend);
                     graph.addSeries(series);
                     graph.getViewport().setXAxisBoundsManual(true);
-                    graph.getViewport().setMinX(pc.Elements.size() - NumToShow);
-                    graph.getViewport().setMaxX(pc.Elements.size());
+                    graph.getViewport().setMinX(pc.Elements.size() - NumToShow-FirstExactTimeValue);
+                    graph.getViewport().setMaxX(pc.Elements.size()-FirstExactTimeValue);
                     series.setOnDataPointTapListener(new OnDataPointTapListener() {
                         @Override
                         public void onTap(Series series, DataPointInterface dataPoint) {
@@ -487,15 +499,15 @@ public class MainActivity extends AppCompatActivity {
                 });
                 high.setColor(0xFFC0B000);
                 graph.addSeries(high);
-                int nref=0;
-                for(int i=0;i<pc.Elements.size();i++){
-                    if(pc.Elements.get(i).IsCalibrationPoint)nref++;
+                int nref = 0;
+                for (int i = 0; i < pc.Elements.size(); i++) {
+                    if (pc.Elements.get(i).IsCalibrationPoint) nref++;
                 }
-                DataPoint[] rp=new DataPoint[nref];
-                int p=0;
-                for(int i=0;i<pc.Elements.size();i++){
-                    if(pc.Elements.get(i).IsCalibrationPoint){
-                        rp[p]=new DataPoint(i, pc.Elements.get(i).values[3]);
+                DataPoint[] rp = new DataPoint[nref];
+                int p = 0;
+                for (int i = 0; i < pc.Elements.size(); i++) {
+                    if (pc.Elements.get(i).IsCalibrationPoint) {
+                        rp[p] = new DataPoint(i, pc.Elements.get(i).values[3]);
                         p++;
                     }
                 }
@@ -511,6 +523,25 @@ public class MainActivity extends AppCompatActivity {
                 });
                 graph.addSeries(refs);
             }
+            graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    if (isValueX) {
+                        int pos=(int)value+FirstExactTimeValue;
+                        if(pos>=0 && pos<pc.Elements.size()){
+                            String s = pc.Elements.get(pos).Date;
+                            if(s.length()>11) {
+                                s = s.substring(11);
+                                if(s.equals("00:00"))s=pc.Elements.get(pos).Date.substring(5);
+                            }
+                            return s;
+                        }
+                        return "";
+                    } else {
+                        return super.formatLabel(value, isValueX);
+                    }
+                }
+            });
 
             TextView T = (TextView)findViewById(R.id.StatusString);
             PocDataElement el = pc.Elements.get(pc.Elements.size()-1);
