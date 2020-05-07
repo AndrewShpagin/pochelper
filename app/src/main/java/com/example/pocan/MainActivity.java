@@ -57,12 +57,12 @@ public class MainActivity extends AppCompatActivity {
         NumChannels=11;
         FirstExactTimeValue=-1;
         Props=new ChannelProps[]{
-            new ChannelProps(0xFFFF0000,0,6,"Iw"),          //0
-            new ChannelProps(0xFF0000FF,0,6,"Ib"),          //1
+            new ChannelProps(0xFFFF8000,0,6,"Iw"),          //0
+            new ChannelProps(0xFF0080FF,0,6,"Ib"),          //1
             new ChannelProps(0xFF800000,30,40,"T"),         //2
             new ChannelProps(0xFF00FF00,3.9,10,"Ref"),      //3
-            new ChannelProps(0xFF808000,3.9,10,"POC1"),     //4
-            new ChannelProps(0xFF00FFFF,3.9,10,"POC2"),     //5
+            new ChannelProps(0xFF00FF80,3.9,10,"POC1"),     //4
+            new ChannelProps(0xFF80FF00,3.9,10,"POC2"),     //5
             new ChannelProps(0xFF000000,0,10,"K"),          //6
             new ChannelProps(0xFFFF0000,0,6,"Iw(sm)"),      //7
             new ChannelProps(0xFF0000FF,0,6,"Ib(sm)"),      //8
