@@ -1,6 +1,7 @@
+
 **Использование приложения ”PocTech Inside”**
 
-1. Запустите приложение, разрешите доступ к файлам.
+1. Загрузите PocHelper-apk-to-install.apk (в корне репозитория). Запустите приложение, разрешите доступ к файлам.
 2. В приложении PocTech Care Mobile перейдите во вкладку Data, Review & Export Data, выберите сенсор, нажмите Export.
 3. Перейдите в приложение PocTech Inside. Вы увидите график и текущее значение сахара (BS). Каждый раз при экспорте график авто-обновляется.
 4. Значение будут показываться даже до того, как вы впервые откалибруете датчик. Однако, будьте осторожны, это лишь оценочное значение. 
@@ -25,7 +26,7 @@
     
 ** Using the PocTech Inside app **
 
-1. Run the application, allow access to files.
+1. Download PocHelper-apk-to-install.apk (in the root of the repositiory). Run the application, allow access to files.
 2. In the PocTech Care Mobile application, go to the Data, Review & Export Data tab, select a sensor, click Export.
 3. Go to the PocTech Inside app. You will see a graph and the current value of sugar (BS). Each time you export, the schedule is auto-updated. 
 4. The value will be displayed even before you first calibrate the sensor. However, be careful, this is just an estimate.
