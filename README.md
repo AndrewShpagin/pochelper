@@ -10,7 +10,7 @@
 4. The value will be displayed even before you first calibrate the sensor. However, be careful, this is just an estimate.
 5. The program is based on the use of the formula
 \
-** BS = (Iw-Ib) / K **
+**BS = (Iw-Ib) / K**
 \
 Where K is the sensitivity of the sensor, Iw is the glucose-dependent current, Ib is the base (glucose-independent) current. These currents are visible in the PocTech Care Mobile app on the Data page. By default, we assume R = 5.5, but as the device works, this coefficient slowly changes. If you reuse the sensor, then you should know your K coefficient; it is displayed in the PocTech Inside application. Instead of the value 5.5, you can enter your own in the settings. Put [x] Override K and enter the value. It makes sense to set if there was no calibration yet. In the case of a correct calibration (on even sugar), it makes no big sense to enter your K.
 6. You can see other useful graphs, select the ones you need from the drop-down list. POC1, POC2 - other calculation algorithms, you can try which ones are best for you.
