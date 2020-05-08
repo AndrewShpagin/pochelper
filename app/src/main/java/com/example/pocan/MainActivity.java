@@ -334,24 +334,20 @@ public class MainActivity extends AppCompatActivity {
             File directory = new File("/storage/emulated/0/PocData/");
             File[] files = directory.listFiles();
             appendLog("MainActivity::ReadLastGraph, directory.listFiles done");
-            FileTime Last = null;
+            long Last = 0;
             boolean First = true;
             String Best = "";
             long BestSize=0;
             for (int i = 0; i < files.length; i++) {
                 File myfile = files[i];
-                Path path = myfile.toPath();
-                if (path.toString().contains(".txt")) {
+                if (myfile.getName().contains(".txt")) {
                     try {
-                        BasicFileAttributes fatr = Files.readAttributes(path,
-                                BasicFileAttributes.class);
-                        FileTime f = fatr.creationTime();
-                        if (Last == null) Last = f;
-                        if (First || f.compareTo(Last) > 0) {
+                        long lastmodified = myfile.lastModified();
+                        if (First || lastmodified > Last) {
                             First = false;
-                            Last = f;
-                            Best = files[i].getAbsolutePath();
-                            BestSize = files[i].length();
+                            Last = lastmodified;
+                            Best = myfile.getAbsolutePath();
+                            BestSize = myfile.length();
                         }
                     } catch (Exception e) {
                         appendLog("Exception,MainActivity::ReadLastGraph[1] " + e.getMessage());
