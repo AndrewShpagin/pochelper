@@ -51,4 +51,8 @@ Description of available graphs:
     *   POC1 - алгоритм 1 (от PocTech).
     *   POC2 - алгоритм 2 (от PocTech). 
 
-![Screenshot](https://bitbucket.org/AndrewShpagin/pochelper/raw/master/images/poc1.jpg)
+<p float="left">
+  <img src="/images/Im1.jpg" width="285" />
+  <img src="/images/Im2.jpg" width="285" /> 
+  <img src="/images/Im3.jpg" width="285" />
+</p>
