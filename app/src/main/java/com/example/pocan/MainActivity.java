@@ -391,14 +391,14 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        //DrawerLayout drawer = findViewById(R.id.drawer_layout);
+       // NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_settings, R.id.nav_slideshow)
-                .setDrawerLayout(drawer)
-                .build();
+        //mAppBarConfiguration = new AppBarConfiguration.Builder(
+        //        R.id.nav_home, R.id.nav_settings, R.id.nav_slideshow)
+        //        .setDrawerLayout(drawer)
+        //        .build();
         //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         //NavigationUI.setupWithNavController(navigationView, navController);
@@ -629,12 +629,6 @@ public class MainActivity extends AppCompatActivity {
         MenuRef=menu;
         SetupMenuBoxes();
         return true;
-    }
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
     }
     public void CheckPermissions(){
         Context context = getApplicationContext();
