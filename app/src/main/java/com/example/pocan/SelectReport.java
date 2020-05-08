@@ -53,12 +53,11 @@ public class SelectReport extends AppCompatActivity {
         VL.addView(T);
         for (int i = 0; i < files.length; i++) {
             File myfile = files[i];
-            Path path = myfile.toPath();
-            if (path.toString().contains(".txt")) {
+            String path = myfile.toString();
+            if (path.contains(".txt")) {
                 TextView T1=new TextView(this);
-                String s=path.toString();
-                s = s.replace(path0,"");
-                T1.setText(s);
+                path = path.replace(path0,"");
+                T1.setText(path);
                 T1.setTextSize(20.0f);
                 final String res=path.toString();
                 T1.setOnClickListener(new View.OnClickListener() {
