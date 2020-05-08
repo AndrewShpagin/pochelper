@@ -1,5 +1,5 @@
 # ![](https://github.com/AndrewShpagin/pochelper/raw/master/images/outline_save_alt_black_18dp.png)[Download APK](https://github.com/AndrewShpagin/pochelper/releases)
-
+![Android CI](https://github.com/AndrewShpagin/pochelper/workflows/Android%20CI/badge.svg)
 ### WARNING! This app may not guarantee correct results of measurements! It just helps to understand what happens.
     
 **Using the PocTech Inside app**
