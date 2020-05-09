@@ -52,24 +52,25 @@ import com.jjoe64.graphview.series.DataPointInterface;
 public class MainActivity extends AppCompatActivity {
     public MainActivity(){
         pc=new PocDataContainer();
-        CurrentEL=10;
         NumToShow=60;
         NumChannels=11;
         FirstExactTimeValue=-1;
-        Props=new ChannelProps[]{
-            new ChannelProps(0xFFFF8000,0,6,"Iw"),          //0
-            new ChannelProps(0xFF0080FF,0,6,"Ib"),          //1
-            new ChannelProps(0xFF800000,30,40,"T"),         //2
-            new ChannelProps(0xFF00FF00,3.9,10,"Ref"),      //3
-            new ChannelProps(0xFF00FF80,3.9,10,"POC1"),     //4
-            new ChannelProps(0xFF80FF00,3.9,10,"POC2"),     //5
-            new ChannelProps(0xFF000000,0,10,"K"),          //6
-            new ChannelProps(0xFFFF0000,0,6,"Iw(sm)"),      //7
-            new ChannelProps(0xFF0000FF,0,6,"Ib(sm)"),      //8
-            new ChannelProps(0xFF8080FF,3.9,10,"BS"),       //9
-            new ChannelProps(0xFF0000FF,3.9,10,"BS(sm)")    //10
-        };
-        Props[10].Visible=true;
+        if (Props==null) {
+            Props = new ChannelProps[]{
+                    new ChannelProps(0xFF0080FF, "Ib", false),          //1
+                    new ChannelProps(0xFFFF8000, "Iw", false),          //0
+                    new ChannelProps(0xFF800000, "T", false),         //2
+                    new ChannelProps(0xFF00FF00, "Ref", true),      //3
+                    new ChannelProps(0xFF00FF80, "POC1", true),     //4
+                    new ChannelProps(0xFF80FF00, "POC2", true),     //5
+                    new ChannelProps(0xFF000000, "K", false),          //6
+                    new ChannelProps(0xFFFF0000, "Iw(sm)", false),      //7
+                    new ChannelProps(0xFF0000FF, "Ib(sm)", false),      //8
+                    new ChannelProps(0xFF8080FF, "BS", true),       //9
+                    new ChannelProps(0xFF0000FF, "BS(sm)", true)    //10
+            };
+            Props[10].Visible = true;
+        }
         timer=null;
         LastFile="";
         OverrideIb =false;
@@ -81,41 +82,48 @@ public class MainActivity extends AppCompatActivity {
         LastOpenReport="";
         LastFileSize=0;
     }
+    ///Properties of each channel
     public class ChannelProps{
-        public ChannelProps(int cl, double low, double high,String legend){
+        public ChannelProps(int cl, String legend, boolean _IsBloodSugar){
             color=cl;
-            LowRange=low;
-            HighRange=high;
             Legend=legend;
             Visible=false;
-            IsBloodSugar=false;
-            if(low==3.9)IsBloodSugar=true;
+            IsBloodSugar=_IsBloodSugar;
             if(legend.charAt(0)=='I')IsCurrent=true;
         }
+        ///color on the graph
         public int color;
-        public double LowRange;
-        public double HighRange;
+        ///The legend
         public String Legend;
+        ///Currently visible on the graph
         public boolean Visible;
+        ///Uses Blood Surgar scale and units
         public boolean IsBloodSugar;
+        ///Use Currents scale
         public boolean IsCurrent;
     }
+    ///the date read from the report
     public class PocDataElement{
         public PocDataElement(){
             values = new double[11];
             PrevRef=-1;
             NextRef=-1;
         }
-        // [0] Iw, [1] Ib, [2] Temperature, [3] Ref, [4] poc1, [5] poc2, [6] K,
-        // [7] Iw_smoothed, [8] Ib_smoothed, [9] Predicted, [10] Predicted_smoothed
+        /// [0] Iw, [1] Ib, [2] Temperature, [3] Ref, [4] poc1, [5] poc2, [6] K,
+        /// [7] Iw_smoothed, [8] Ib_smoothed, [9] Predicted, [10] Predicted_smoothed
         public double[] values;
+        ///used forrelaxing values
         public double Temp;
-        public boolean IsValidPoint;
+        ///BS manually measured there
         public boolean IsCalibrationPoint;
+        ///date/time as string
         public String Date;
+        ///index of the previous manual BS measurement
         public int PrevRef;
+        ///index of the next manual BS measurement
         public int NextRef;
     }
+    ///rounding the time +-1 min to round values
     public String RoundDate(String s){
         return s.replace(":01",":00")
                 .replace(":59",":00")
@@ -123,21 +131,25 @@ public class MainActivity extends AppCompatActivity {
                 .replace(":31",":30");
 
     }
+    ///List of all elements from the txt report
     public class PocDataContainer{
         public PocDataContainer() {
             Elements = new ArrayList<PocDataElement>();
         }
         public ArrayList<PocDataElement> Elements;
+        ///copy data from the src channel to the dst
         public void Copy(int src, int dst){
             for(int i=0;i<Elements.size();i++){
                 Elements.get(i).values[dst] = Elements.get(i).values[src];
             }
         }
+        ///copy data from the src channel to Temp
         public void ToTemp(int src){
             for(int i=0;i<Elements.size();i++){
                 Elements.get(i).Temp = Elements.get(i).values[src];
             }
         }
+        ///relax the channel
         public void Smooth(int channel, int ntimes){
             for(int i=0;i<ntimes;i++){
                 ToTemp(channel);
@@ -147,15 +159,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        ///predict the BS values
         public void MakePredictions(){
             int nsmooth=10;
+            ///first, relax currents to avoid noise
             Smooth(7,nsmooth);//Iw_smoothed
             Smooth(8,nsmooth);//Ib_smoothed
             //setting default K=5.5
             for(int i=0;i<Elements.size();i++) {
                 Elements.get(i).values[6] = 5.5;
             }
-            //getting K for ref points
+            //getting K for ref points using relaxed currents
             for(int i=0;i<Elements.size();i++){
                 if(Elements.get(i).IsCalibrationPoint){
                     if(MainActivity.OverrideIb) {
@@ -165,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-            //interpolation of K
+            //interpolation of K, using the linear one
             for(int i=0;i<Elements.size();i++) {
                 int next=Elements.get(i).NextRef;
                 int prev=Elements.get(i).PrevRef;
@@ -178,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                     Elements.get(i).values[6]=vp+(vn-vp)*x;
                 }
             }
+            ///overriding K if need
             if(MainActivity.OverrideK){
                 for(int i=0;i<Elements.size();i++) {
                     Elements.get(i).values[6]=MainActivity.OverridenK;
@@ -198,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        ///reading the txt report
         public void read(String pathname){
             try
             {
@@ -240,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        ///making the graph from the channel
         public LineGraphSeries<DataPoint> GetGraph(int channel){
             DataPoint[] dataPoints = new DataPoint[Elements.size()];
             FirstExactTimeValue=-1;
@@ -258,24 +275,38 @@ public class MainActivity extends AppCompatActivity {
             return gr;
         }
     }
+    ///the data from the txt report
     public PocDataContainer pc;
-    public int CurrentEL;
+    ///amount of data items to show
     public int NumToShow;
+    ///amount of data channels, now 11
     public int NumChannels;
+    ///the index in data array where you have exact time XX:00
     public int FirstExactTimeValue;
+    ///timer to run each several seconds
     public Timer timer;
 
+    ///last loaded report
     public static String  LastFile;
+    ///last loaded report file size
     public static long LastFileSize;
+    ///settings: "Override Ib"
     public static boolean OverrideIb;
+    ///settings: "Overriden Ib"
     public static double  OverridenIb;
+    ///settings: "Override K"
     public static boolean OverrideK;
+    ///settings: "Overriden K"
     public static double  OverridenK;
+    ///settings changed, need to reload the report
     public static boolean SettingsChanged;
+    ///report that chesen manually
     public static String  ReportToOpen;
+    ///last report that was open manually
     public static String  LastOpenReport;
+    ///menu reference
     public Menu MenuRef;
-
+    ///save settings to /storage/emulated/0/PocData/settings.dat
     public static void SaveSettings(){
         try {
             appendLog("MainActivity::SaveSettings");
@@ -292,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
             appendLog("MainActivity::SaveSettings failed");
         }
     }
+    ///load settings from /storage/emulated/0/PocData/settings.dat
     public static void LoadSettings(){
         try {
             appendLog("MainActivity::LoadSettings");
@@ -314,12 +346,13 @@ public class MainActivity extends AppCompatActivity {
             appendLog("MainActivity::LoadSettings failed");
         }
     }
-    ChannelProps[] Props;
+    ///channelsproperties
+    static ChannelProps[] Props;
+    ///get reference to the channel property
     ChannelProps prop(int channel){
         return Props[channel];
     }
-    private AppBarConfiguration mAppBarConfiguration;
-    //returns true if something changed
+    //load values from the txt report, returns true if something changed
     public boolean ReadLastGraph() {
         try {
             if(ReportToOpen.length() > 0){
@@ -387,17 +420,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        //DrawerLayout drawer = findViewById(R.id.drawer_layout);
-       // NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        //mAppBarConfiguration = new AppBarConfiguration.Builder(
-        //        R.id.nav_home, R.id.nav_settings, R.id.nav_slideshow)
-        //        .setDrawerLayout(drawer)
-        //        .build();
-        //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        //NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        //NavigationUI.setupWithNavController(navigationView, navController);
         GraphView graph = (GraphView) findViewById(R.id.graph);
         ReadLastGraph();
         setupGraph();
@@ -415,21 +437,19 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
-        //if(timer == null) {
-            final Handler handler = new Handler();
-            timer = new Timer();
-            timer.scheduleAtFixedRate(new TimerTask() {
-                public void run() {
-                    handler.post(new Runnable() {
-                        public void run() {
-                            if (ReadLastGraph()) {
-                                setupGraph();
-                            }
+        final Handler handler = new Handler();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        if (ReadLastGraph()) {
+                            setupGraph();
                         }
-                    });
-                }
-            }, 0, 2000);
-        //}
+                    }
+                });
+            }
+        }, 0, 2000);
     }
     public void SetupMenuBoxes(){
         int[] ChIds=new int[]{R.id.show_Iw,R.id.show_Ib,-1,-1,R.id.show_Poc1,R.id.show_Poc2,R.id.show_K,-1,-1,R.id.show_BS, R.id.show_BS_smooth};
@@ -556,6 +576,7 @@ public class MainActivity extends AppCompatActivity {
 
             TextView T = (TextView)findViewById(R.id.StatusString);
             PocDataElement el = pc.Elements.get(pc.Elements.size()-1);
+            ///display BS and currents
             T.setText("BS: "+String.format("%.1f", el.values[10])
                     +" K: "+String.format("%.2f", el.values[6])
                     +" Iw: "+String.format("%.1f", el.values[0])
@@ -563,10 +584,12 @@ public class MainActivity extends AppCompatActivity {
         }
         SetupMenuBoxes();
     }
+    ///show options tab
     public void Options(){
         Intent intent = new Intent(MainActivity.this, SettingsPage.class);
         startActivity(intent);
     }
+    ///show file selection tab
     public void SelFile(){
         Intent intent = new Intent(MainActivity.this, SelectReport.class);
         startActivity(intent);
@@ -635,6 +658,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
         }
     }
+    ///log to /storage/emulated/0/PocData/log.file
     public static void appendLog(String text) {
         File logFile = new File("/storage/emulated/0/PocData/log.file");
         if (!logFile.exists())
