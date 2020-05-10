@@ -1,4 +1,4 @@
-# ![](https://github.com/AndrewShpagin/pochelper/raw/master/images/outline_save_alt_black_18dp.png)[Download APK](https://github.com/AndrewShpagin/pochelper/releases)
+# ![](https://github.com/AndrewShpagin/pochelper/raw/master/images/outline_save_alt_black_18dp.png)[Download APK](https://github.com/AndrewShpagin/pochelper/releases/download/v1.00.01/PocInside-apk-to-install.apk)
 ![Android CI](https://github.com/AndrewShpagin/pochelper/workflows/Android%20CI/badge.svg)
 ### WARNING! This app may not guarantee correct results of measurements! It just helps to understand what happens.
     
