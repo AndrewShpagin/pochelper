@@ -660,6 +660,8 @@ public class MainActivity extends AppCompatActivity {
     }
     ///log to /storage/emulated/0/PocData/log.file
     public static void appendLog(String text) {
+        return;//disable logs
+        /*
         File logFile = new File("/storage/emulated/0/PocData/log.file");
         if (!logFile.exists())
         {
@@ -686,5 +688,6 @@ public class MainActivity extends AppCompatActivity {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        */
     }
 }
