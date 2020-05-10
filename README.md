@@ -1,4 +1,4 @@
-# ![](https://github.com/AndrewShpagin/pochelper/raw/master/images/outline_save_alt_black_18dp.png)[Download APK](https://github.com/AndrewShpagin/pochelper/releases/download/v1.00.01/PocInside-apk-to-install.apk)
+# ![](https://github.com/AndrewShpagin/pochelper/raw/master/images/outline_save_alt_black_18dp.png)[Download APK](https://github.com/AndrewShpagin/pochelper/releases/download/v1.00.01/PocInside-apk-to-install.apk)  [[mirror Link]](https://drive.google.com/drive/u/0/folders/1cfbK6-S0O9q5ox5YyqrhvSNhKSESfllO)
 ![Android CI](https://github.com/AndrewShpagin/pochelper/workflows/Android%20CI/badge.svg)
 ### WARNING! This app may not guarantee correct results of measurements! It just helps to understand what happens.
     
