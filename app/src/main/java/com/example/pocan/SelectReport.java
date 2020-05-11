@@ -59,7 +59,7 @@ public class SelectReport extends AppCompatActivity {
                 path = path.replace(path0,"");
                 T1.setText(path);
                 T1.setTextSize(20.0f);
-                final String res=path.toString();
+                final String res=myfile.toString();
                 T1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
