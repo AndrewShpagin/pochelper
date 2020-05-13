@@ -10,6 +10,8 @@
     <string name="show_BS_smooth">Show smooth BS</string>
     <string name="show_Iw">Show Iw</string>
     <string name="show_Ib">Show Ib</string>
+    <string name="smooth_Iw">Shooth Iw</string>
+    <string name="smooth_Ib">Smooth Ib</string>
     <string name="show_K">Show K</string>
     <string name="show_Poc1">Show POC1</string>
     <string name="show_Poc2">Show POC2</string>
@@ -25,6 +27,7 @@
     <string name="value_Ib">Value for Ib</string>
     <string name="override_K">Override K</string>
     <string name="value_K">Value for K</string>
+    <string name="smooth_value">Smooth degree</string>
 
     <string name="home_second">Home Second</string>
     <string name="sel_file">Choose file</string>

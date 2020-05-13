@@ -35,18 +35,28 @@
         android:orderInCategory="107"
         android:title="@string/show_Iw" />
     <item
-        android:id="@+id/show_Ib"
+        android:id="@+id/smooth_Iw"
         android:checkable="true"
         android:orderInCategory="108"
+        android:title="@string/smooth_Iw" />
+    <item
+        android:id="@+id/show_Ib"
+        android:checkable="true"
+        android:orderInCategory="109"
         android:title="@string/show_Ib" />
+    <item
+        android:id="@+id/smooth_Ib"
+        android:checkable="true"
+        android:orderInCategory="110"
+        android:title="@string/smooth_Ib" />
     <item
         android:id="@+id/show_Poc1"
         android:checkable="true"
-        android:orderInCategory="109"
+        android:orderInCategory="111"
         android:title="@string/show_Poc1" />
     <item
         android:id="@+id/show_Poc2"
         android:checkable="true"
-        android:orderInCategory="110"
+        android:orderInCategory="112"
         android:title="@string/show_Poc2" />
 </menu>

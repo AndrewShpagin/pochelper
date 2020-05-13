@@ -57,15 +57,15 @@ public class MainActivity extends AppCompatActivity {
         FirstExactTimeValue=-1;
         if (Props==null) {
             Props = new ChannelProps[]{
-                    new ChannelProps(0xFF0080FF, "Ib", false),          //1
-                    new ChannelProps(0xFFFF8000, "Iw", false),          //0
-                    new ChannelProps(0xFF800000, "T", false),         //2
+                    new ChannelProps(0xFF0080FF, "Iw", false),      //1
+                    new ChannelProps(0xFFFF8000, "Ib", false),      //0
+                    new ChannelProps(0xFF800000, "T", false),       //2
                     new ChannelProps(0xFF00FF00, "Ref", true),      //3
                     new ChannelProps(0xFF00FF80, "POC1", true),     //4
                     new ChannelProps(0xFF80FF00, "POC2", true),     //5
-                    new ChannelProps(0xFF000000, "K", false),          //6
-                    new ChannelProps(0xFFFF0000, "Iw(sm)", false),      //7
-                    new ChannelProps(0xFF0000FF, "Ib(sm)", false),      //8
+                    new ChannelProps(0xFF000000, "K", false),       //6
+                    new ChannelProps(0x900080FF, "Iw(sm)", false),  //7
+                    new ChannelProps(0x90FF8000, "Ib(sm)", false),  //8
                     new ChannelProps(0xFF8080FF, "BS", true),       //9
                     new ChannelProps(0xFF0000FF, "BS(sm)", true)    //10
             };
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         ReportToOpen="";
         LastOpenReport="";
         LastFileSize=0;
+        SmoothDegree=8;
     }
     ///Properties of each channel
     public class ChannelProps{
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         }
         ///predict the BS values
         public void MakePredictions(){
-            int nsmooth=10;
+            int nsmooth=SmoothDegree;
             ///first, relax currents to avoid noise
             Smooth(7,nsmooth);//Iw_smoothed
             Smooth(8,nsmooth);//Ib_smoothed
@@ -290,6 +291,8 @@ public class MainActivity extends AppCompatActivity {
     public static String  LastFile;
     ///last loaded report file size
     public static long LastFileSize;
+    ///smoothing degree
+    public static int SmoothDegree;
     ///settings: "Override Ib"
     public static boolean OverrideIb;
     ///settings: "Overriden Ib"
@@ -452,7 +455,7 @@ public class MainActivity extends AppCompatActivity {
         }, 0, 2000);
     }
     public void SetupMenuBoxes(){
-        int[] ChIds=new int[]{R.id.show_Iw,R.id.show_Ib,-1,-1,R.id.show_Poc1,R.id.show_Poc2,R.id.show_K,-1,-1,R.id.show_BS, R.id.show_BS_smooth};
+        int[] ChIds=new int[]{R.id.show_Iw,R.id.show_Ib,-1,-1,R.id.show_Poc1,R.id.show_Poc2,R.id.show_K,R.id.smooth_Iw,R.id.smooth_Ib,R.id.show_BS, R.id.show_BS_smooth};
         for(int k=0;k<NumChannels;k++) {
             int id=ChIds[k];
             if(id!=-1 && MenuRef!=null){
@@ -625,6 +628,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.show_Ib:
                 vis=1;
+                break;
+            case R.id.smooth_Iw:
+                vis=7;
+                break;
+            case R.id.smooth_Ib:
+                vis=8;
                 break;
             case R.id.show_Poc1:
                 vis=4;

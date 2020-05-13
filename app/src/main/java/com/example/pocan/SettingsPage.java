@@ -13,14 +13,22 @@ public class SettingsPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings_page);
+
         CheckBox C=findViewById(R.id.box_Iw);
         C.setChecked(MainActivity.OverrideIb);
+
         C=findViewById(R.id.box_K);
         C.setChecked(MainActivity.OverrideK);
+
         EditText E=findViewById(R.id.value_override_Iw);
         E.setText(String.format("%.02f",MainActivity.OverridenIb));
+
         E=findViewById(R.id.value_override_K);
         E.setText(String.format("%.02f",MainActivity.OverridenK));
+
+        E=findViewById(R.id.smooth_value);
+        E.setText(String.format("%d",MainActivity.SmoothDegree));
+
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
        // getSupportActionBar().setIcon(R.drawable.);
@@ -50,6 +58,15 @@ public class SettingsPage extends AppCompatActivity {
             String s=E.getText().toString();
             s = s.replace(",",".");
             MainActivity.OverridenK = Double.parseDouble(s);
+        }catch (Exception e){
+
+        }
+
+        E=findViewById(R.id.smooth_value);
+        try {
+            String s=E.getText().toString();
+            s = s.replace(",",".");
+            MainActivity.SmoothDegree = (int)Double.parseDouble(s);
         }catch (Exception e){
 
         }
