@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         LastOpenReport="";
         LastFileSize=0;
         SmoothDegree=8;
+        LastLoadTime = (int) (System.currentTimeMillis());
     }
     ///Properties of each channel
     public class ChannelProps{
@@ -286,7 +287,8 @@ public class MainActivity extends AppCompatActivity {
     public int FirstExactTimeValue;
     ///timer to run each several seconds
     public Timer timer;
-
+    ///last time when graph was loaded
+    public static int LastLoadTime;
     ///last loaded report
     public static String  LastFile;
     ///last loaded report file size
@@ -396,6 +398,7 @@ public class MainActivity extends AppCompatActivity {
                 pc.read(Best);//"/storage/emulated/0/PocData/SN06900044_2020-04-25 09_18_59(21).txt");
                 LastFile=Best;
                 LastFileSize=BestSize;
+                LastLoadTime = (int) (System.currentTimeMillis());
                 return true;
             }
         } catch (Exception e) {
@@ -452,7 +455,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-        }, 0, 2000);
+        }, 0, 4000);
+    }
+    @Override
+    public void onResume(){
+        int t = (int) (System.currentTimeMillis());
+        if(t - LastLoadTime > 180000){
+            LastFileSize=0;
+        }
+        super.onResume();
+        if(ReadLastGraph()) {
+            setupGraph();
+        }
     }
     public void SetupMenuBoxes(){
         int[] ChIds=new int[]{R.id.show_Iw,R.id.show_Ib,-1,-1,R.id.show_Poc1,R.id.show_Poc2,R.id.show_K,R.id.smooth_Iw,R.id.smooth_Ib,R.id.show_BS, R.id.show_BS_smooth};
