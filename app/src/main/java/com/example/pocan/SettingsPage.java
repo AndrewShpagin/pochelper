@@ -72,6 +72,9 @@ public class SettingsPage extends AppCompatActivity {
         }
         MainActivity.SettingsChanged=true;
         MainActivity.SaveSettings();
+        if (MainActivity.getContext().ReadLastGraph()) {
+            MainActivity.getContext().setupGraph();
+        }
         this.finish();
     }
 }

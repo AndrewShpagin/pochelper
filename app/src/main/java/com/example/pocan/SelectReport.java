@@ -63,7 +63,10 @@ public class SelectReport extends AppCompatActivity {
                 T1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        MainActivity.ReportToOpen=res;
+                        MainActivity.getContext().ReportToOpen=res;
+                        if (MainActivity.getContext().ReadLastGraph()) {
+                            MainActivity.getContext().setupGraph();
+                        }
                         GoHome(view);
                     }
                 });

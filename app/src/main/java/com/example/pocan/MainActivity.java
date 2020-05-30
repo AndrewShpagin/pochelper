@@ -357,6 +357,16 @@ public class MainActivity extends AppCompatActivity {
     ChannelProps prop(int channel){
         return Props[channel];
     }
+    private static MainActivity mContext;
+
+    public static MainActivity getContext() {
+        return mContext;
+    }
+
+    public void setContext() {
+        mContext = this;
+    }
+
     //load values from the txt report, returns true if something changed
     public boolean ReadLastGraph() {
         try {
@@ -410,6 +420,7 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setContext();
         appendLog("MainActivity::onCreate");
         LoadSettings();
         CheckPermissions();
@@ -443,19 +454,19 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         }
-        final Handler handler = new Handler();
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
-                        if (ReadLastGraph()) {
-                            setupGraph();
-                        }
-                    }
-                });
-            }
-        }, 0, 4000);
+        //final Handler handler = new Handler();
+        //timer = new Timer();
+        //timer.scheduleAtFixedRate(new TimerTask() {
+        //    public void run() {
+        //        handler.post(new Runnable() {
+        //            public void run() {
+        //                if (ReadLastGraph()) {
+        //                    setupGraph();
+        //                }
+        //            }
+        //        });
+        //    }
+        //}, 0, 4000);
     }
     @Override
     public void onResume(){
